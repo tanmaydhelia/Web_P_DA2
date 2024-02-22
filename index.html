@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Resume Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        #input_data {
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #615aa0;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #resumeOutput {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Resume Generator</h1>
+    <div id="input_data">
+        <form id="resumeForm">
+            <section>
+                <h2>Personal Information</h2>
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" required>
+
+                <label for="address">Address:</label>
+                <input type="text" id="address" required>
+            </section>
+
+            <section>
+                <h2>Current Education</h2>
+                <div class="entry-container" id="educationEntries">
+                    <div class="education-entry">
+                        <label for="education">Education Details: </label>
+                        <textarea name="education" rows="4" required></textarea>
+                    </div>
+                </div>
+                <button type="button" onclick="addEntry('educationEntries')">Add Education Entry</button>
+            </section>
+
+            <section>
+                <h2>Work Experience</h2>
+                <label for="experience">Work Experience:</label>
+                <textarea id="experience" rows="4" required></textarea>
+            </section>
+
+            <section>
+                <h2>Skills</h2>
+                <div class="entry-container" id="skillsEntries">
+                    <div class="skills-entry">
+                        <label for="skills">Skills:</label>
+                        <textarea name="skills" rows="4" required></textarea>
+                    </div>
+                </div>
+                <button type="button" onclick="addEntry('skillsEntries')">Add Skills Entry</button>
+            </section>
+
+            <section>
+                <h2>Projects</h2>
+                <div class="entry-container" id="projectsEntries">
+                    <div class="projects-entry">
+                        <label for="projects">Projects:</label>
+                        <textarea name="projects" rows="4" required></textarea>
+                    </div>
+                </div>
+                <button type="button" onclick="addEntry('projectsEntries')">Add Projects Entry</button>
+            </section>
+
+            <button type="button" onclick="generateResume()">Generate Resume</button>
+        </form>
+    </div>
+
+    <div id="resumeOutput"></div>
+
+    <script>
+        function addEntry(containerId) {
+            var container = document.getElementById(containerId);
+            var entryDiv = document.createElement('div');
+            entryDiv.classList.add(containerId.slice(0, -7) + '-entry');
+            entryDiv.innerHTML = `
+                <label for="${containerId.slice(0, -7)}">Entry:</label>
+                <textarea name="${containerId.slice(0, -7)}" rows="4" required></textarea>
+            `;
+            container.appendChild(entryDiv);
+        }
+
+        function generateResume() {
+            var fullName = document.getElementById('fullName').value;
+            var email = document.getElementById('email').value;
+            var phone = document.getElementById('phone').value;
+            var address = document.getElementById('address').value;
+            var educationEntries = document.querySelectorAll('.education-entry textarea');
+            var experience = document.getElementById('experience').value;
+            var skillsEntries = document.querySelectorAll('.skills-entry textarea');
+            var projectsEntries = document.querySelectorAll('.projects-entry textarea');
+
+            var resume = `
+                <h2>Personal Information</h2>
+                <table>
+                    <tr>
+                        <td><strong>Full Name:</strong></td>
+                        <td>${fullName}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email:</strong></td>
+                        <td>${email}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Phone:</strong></td>
+                        <td>${phone}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Address:</strong></td>
+                        <td>${address}</td>
+                    </tr>
+                </table>
+                <hr>
+                <h2>Educational Information</h2>
+            `;
+
+            educationEntries.forEach(function (entry, index) {
+                resume += `
+                <p><strong>Education ${index + 1}:</strong> ${entry.value}</p>`;
+            });
+
+            resume += `
+                <h2>Work Experience</h2>
+                <p>${experience}</p>
+
+                <h2>Skills</h2>
+            `;
+
+            skillsEntries.forEach(function (entry, index) {
+                resume += `<p><strong>Skills ${index + 1}:</strong> ${entry.value}</p>`;
+            });
+
+            resume += `
+                <h2>Projects</h2>
+            `;
+
+            projectsEntries.forEach(function (entry, index) {
+                resume += `<p><strong>Projects ${index + 1}:</strong> ${entry.value}</p>`;
+            });
+
+            document.getElementById('resumeOutput').innerHTML = resume;
+            document.getElementById('input_data').style.display = "none";
+        }
+    </script>
+</body>
+
+</html>
